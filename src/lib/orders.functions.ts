@@ -16,8 +16,10 @@ export const placeOrder = createServerFn({ method: "POST" })
   .inputValidator((d) => schema.parse(d))
   .handler(async ({ data }) => {
     const lines = data.items
-      .filter((i) => MENU_PRICES[i.id])
-      .map((i) => ({ ...i, ...MENU_PRICES[i.id], subtotal: MENU_PRICES[i.id].price * i.qty }));
+      .flatMap((i) => {
+        const p = MENU_PRICES[i.id];
+        return p ? [{ ...i, ...p, subtotal: p.price * i.qty }] : [];
+      });
     const total = lines.reduce((s, l) => s + l.subtotal, 0);
     const orderId = "RB-" + Date.now().toString(36).toUpperCase();
     const text = [

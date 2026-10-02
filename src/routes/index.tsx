@@ -50,7 +50,7 @@ function Index() {
       if (q) n[id] = q; else delete n[id];
       return n;
     });
-  const lines = MENU.filter((m) => cart[m.id]).map((m) => ({ ...m, qty: cart[m.id] }));
+  const lines = MENU.filter((m) => cart[m.id]).map((m) => ({ ...m, qty: cart[m.id] ?? 0 }));
   const count = lines.reduce((s, l) => s + l.qty, 0);
   const total = lines.reduce((s, l) => s + l.qty * l.price, 0);
 
